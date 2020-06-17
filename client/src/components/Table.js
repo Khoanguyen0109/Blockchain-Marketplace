@@ -13,67 +13,81 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-    root :{
-        marginBottom: 50,
-        marginTop:70
-
-    },
+  root: {
+    marginBottom: 50,
+    marginTop: 70,
+  },
   table: {
     minWidth: 150,
     maxWidth: 1000,
     margin: "auto",
     marginBottom: 50,
-    
+  },
+  search: {
+    position: "relative",
+    width: '100%',
+  },
+  searchBox: {
+    position: "absolute",
+    marginLeft: "50px",
   },
 });
 function TableProduct(props) {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
-    const stateProduct =['at Creator','Shiping','Received']
+  const stateProduct = ["at Creator", "Shiping", "Received"];
   let filetProduct = props.products.filter((product) => {
     return product.productID.toString().indexOf(searchText) !== -1;
   });
 
   return (
     <div className={classes.root}>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <SearchIcon />
-              <InputBase
-                placeholder="Search…"
-                onChange={(event) =>
-                  setSearchText(event.target.value.substr(0, 20))
-                }
-                inputProps={{ "aria-label": "search" }}
-              />
-            </TableRow>
-            <TableRow>
-              <TableCell align="left">Id Product</TableCell>
-              <TableCell  align="left"> Name</TableCell>
-              <TableCell align="right">Manufactor</TableCell>
-              <TableCell align="right">Shipper</TableCell>
-              <TableCell align="right">Retailer</TableCell>
-              <TableCell align="right">Product State</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filetProduct.map((product) => (
-              <TableRow key={product.productID}>
-                <TableCell style={{width:'200'}} >
-                  {product.productID}
-                </TableCell>
-                <TableCell align="left" component="th" scope="row" >{product.productName}</TableCell>
-                <TableCell align="right">{product.manufactor}</TableCell>
-                <TableCell align="right">{product.shipper}</TableCell>
-                <TableCell align="right">{product.retailer}</TableCell>
-                <TableCell align="right">{stateProduct[product.status]}</TableCell>
+      <div></div>
+      <div>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow className={classes.search}>
+                <SearchIcon />
+                <InputBase
+                  placeholder="Search…"
+                  onChange={(event) =>
+                    setSearchText(event.target.value.substr(0, 20))
+                  }
+                  className={classes.searchBox}
+                  inputProps={{ "aria-label": "search" }}
+                />
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              <TableRow>
+                <TableCell align="left">Id Product</TableCell>
+                <TableCell align="left"> Name</TableCell>
+                <TableCell align="right">Manufactor</TableCell>
+                <TableCell align="right">Shipper</TableCell>
+                <TableCell align="right">Retailer</TableCell>
+                <TableCell align="right">Product State</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filetProduct.map((product) => (
+                <TableRow key={product.productID}>
+                  <TableCell style={{ width: "200" }}>
+                    {product.productID}
+                  </TableCell>
+                  <TableCell align="left" component="th" scope="row">
+                    {product.productName}
+                  </TableCell>
+                  <TableCell align="right">{product.manufactor}</TableCell>
+                  <TableCell align="right">{product.shipper}</TableCell>
+                  <TableCell align="right">{product.retailer}</TableCell>
+                  <TableCell align="right">
+                    {stateProduct[product.status]}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </div>
   );
 }

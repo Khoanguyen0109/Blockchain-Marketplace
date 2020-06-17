@@ -1,5 +1,6 @@
 /// Marketplace
-export const GET_PRODUCTS ='GET_PRODUCTS'
+export const SET_MARKETPLACE = 'SET_MARKETPLACE'
+export const SET_PRODUCTS ='SET_PRODUCTS'
 export const CREAT_PRODUCT='CREATE_PRODUCT'
 export const SHIP_PRODUCT= 'SHIP_PRODUCT'
 export const RECEIVE_PRODUCT='RECEIVE_PRODUCT'

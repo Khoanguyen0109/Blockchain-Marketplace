@@ -1,7 +1,18 @@
+import { SET_MARKETPLACE, SET_PRODUCTS } from "../type";
 
 
-// export const createProduct =({data :{id, name}}, market ,account ) => async (dispatch)=>{
-//     const res = await market.method.createProduct(id,name).send({from : account})
-//     console.log('res', res)
+export function setMarketPlace (marketPlace) {
+    return{
+        type: SET_MARKETPLACE,
+        payload: marketPlace,
+    }   
+}
 
-// }
+export function setProducts(products){
+    return{
+        type:SET_PRODUCTS,
+        payload: products
+    }
+}
+
+

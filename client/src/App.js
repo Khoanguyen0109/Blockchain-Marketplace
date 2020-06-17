@@ -49,7 +49,9 @@ function App() {
   useEffect(() => {
     loadWeb3();
     loadBlockchainData();
-  }, [account]);
+  }, [account,products]);
+
+  
 
   async function loadWeb3() {
     if (window.ethereum) {

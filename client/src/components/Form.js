@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 const useStyles = makeStyles({
   root: {
     width: "100%",
@@ -24,6 +25,8 @@ function Form(props) {
   const classes = useStyles();
   const [id, setId] = useState();
   const [name, setName] = useState("");
+  const history = useHistory()
+  const [errors, setErrors] = useState({})
 
 
     function createProduct(id, name) {
@@ -38,13 +41,21 @@ function Form(props) {
         .on("error", function (error, receipt) {
           console.log("receiptE", receipt);
           console.log("error", error);
+          setErrors(error)
         });
     }
 
   const handleSubmit = (event) => {
       event.preventDefault()
     createProduct(id, name);
-    
+    if ( errors !== {}){
+      alert('Make a trasaction')
+      history.push('/')
+    }
+    else{
+      alert('Create Failed')
+      console.log('error', errors)
+    }
   };
 
   return (

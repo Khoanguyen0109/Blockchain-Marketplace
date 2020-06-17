@@ -34,6 +34,7 @@ function UserForm(props) {
     props.marketPlace.methods.registerUser(address, name, role).send({ from: props.account })
     .on("receipt", function (receipt) {
         console.log(receipt);
+        alert('Register Successfully')
       })
       .on("error", function (error, receipt) {
         console.log("receiptE", receipt);
