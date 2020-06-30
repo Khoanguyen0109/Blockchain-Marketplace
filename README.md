@@ -12,6 +12,11 @@ Set up [MetaMask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeoga
 
 ## Installation
 
+Install trufle
+```
+npm install -g truffle
+```
+
 Run migrate to create abis/MarketPlace.js 
 ```
 truffle migrate
