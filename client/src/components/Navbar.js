@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  user:{
+    display: 'flex',
+    flexDirection: "column"
+  },
   account: {
     flexGrow: 1,
     fontSize: 15,
@@ -40,8 +44,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Navbar({ account }) {
+function Navbar(props) {
+
   const classes = useStyles();
+  const account = props.account
+  const role = props.role
+  const roles =[ 'N/A','manufacture' ,'Shipper', 'Retailer']
+
+
+
+
+  // console.log('accountRole :>> ', accountRole); 
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -94,10 +108,16 @@ function Navbar({ account }) {
               <h3> Register for Marketplace </h3>
             </Link>
           </Typography>
-          </div>
+          </div >
+          <div className={classes.user}>
           <Typography variant="h6" className={classes.account}>
             Account : {account}
           </Typography>
+          <Typography variant="h6" className={classes.account}>
+            Role : {roles[role]}
+          </Typography>
+          </div>
+ 
         </Toolbar>
       </AppBar>
     </div>

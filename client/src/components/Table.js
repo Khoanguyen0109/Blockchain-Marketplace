@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import Web3 from "web3";
+import MarketPlace from "../abis/Marketplace.json";
 
 //MUI
 import SearchIcon from "@material-ui/icons/Search";
@@ -25,7 +28,7 @@ const useStyles = makeStyles({
   },
   search: {
     position: "relative",
-    width: '100%',
+    width: "100%",
   },
   searchBox: {
     position: "absolute",
@@ -34,15 +37,65 @@ const useStyles = makeStyles({
 });
 function TableProduct(props) {
   const classes = useStyles();
+  const [marketPlace, setMarketPlace] = useState({});
+  const [products, setProducts] = useState([]);
+  const [productCount, setProductCount] = useState(0);
+
   const [searchText, setSearchText] = useState("");
   const stateProduct = ["at Creator", "Shiping", "Received"];
-  let filetProduct = props.products.filter((product) => {
-    return product.productID.toString().indexOf(searchText) !== -1;
-  });
+
+  // const Count = props.marketPlace.methods.productCount()
+
+  // console.log('Count :>> ', Count);
+  useEffect(() => {
+    loadWeb3();
+    loadBlockchainData();
+  }, []);
+
+  async function loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      window.alert(
+        "Non-Ethereum browser detected. You should consider trying MetaMask!"
+      );
+    }
+  }
+  async function loadBlockchainData() {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = MarketPlace.networks[networkId];
+    if (networkData) {
+      const marketPlace = await new web3.eth.Contract(
+        MarketPlace.abi,
+        networkData.address
+      );
+      setMarketPlace(marketPlace);
+
+      const Count = await marketPlace.methods.productCount().call();
+      setProductCount(Count);
+      const list = [];
+      for (var i = 1; i <= Count; i++) {
+        const product = await marketPlace.methods.products(i).call();
+        list.push(product);
+      }
+      setProducts(list);
+    } else {
+      window.alert("marketPlace contract not deployed to detected network.");
+    }
+  }
+
+  let filetProduct = products
+    ? products.filter((product) => {
+        return product.productID.toString().indexOf(searchText) !== -1;
+      })
+    : [];
 
   return (
     <div className={classes.root}>
-      <div></div>
       <div>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">

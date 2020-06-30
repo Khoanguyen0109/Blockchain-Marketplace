@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Web3 from "web3";
 // Route
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -30,12 +30,15 @@ const theme = createMuiTheme({
 });
 function App() {
   const [account, setAccount] = useState("");
+  const [role, setRole] = useState("")
   const [products, setProducts] = useState([]);
-  const [marketPlace, setMarketPlace] = useState({});
   const [productCount, setProductCount] = useState(0);
+  const [marketPlace, setMarketPlace] = useState({});
+
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
 
+  const isMounted = useRef(false);
   // const [state, setState] = useState({
   //   account: "",
   //   marketPlace: null,
@@ -47,12 +50,13 @@ function App() {
   // });
 
   useEffect(() => {
-    loadWeb3();
-    loadBlockchainData();
-  }, [account,products]);
+    
+      loadWeb3();
+      loadBlockchainData();
 
-  
-
+    
+  }, [account]);
+ 
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -65,13 +69,11 @@ function App() {
       );
     }
   }
-
   async function loadBlockchainData() {
     const web3 = window.web3;
     // Load account
     const accounts = await web3.eth.getAccounts();
     setAccount(accounts[0]);
-    console.log("account", account);
     // Network ID
     const networkId = await web3.eth.net.getId();
     const networkData = MarketPlace.networks[networkId];
@@ -85,35 +87,40 @@ function App() {
       setLoading(false);
       const Count = await marketPlace.methods.productCount().call();
       setProductCount(Count);
-
       const list = [];
       for (var i = 1; i <= Count; i++) {
         const product = await marketPlace.methods.products(i).call();
         list.push(product);
       }
       setProducts(list);
+      console.log('accounts[0]', accounts[0])
+      const R = await marketPlace.methods.UserInfo(accounts[0]).call()
+      setRole(R.role)
+
+      
     } else {
       window.alert("marketPlace contract not deployed to detected network.");
     }
   }
-  console.log("productCount", productCount);
-  console.log(products);
+  console.log('account', account)
+  console.log('marketPlace', marketPlace)
+  // console.log(products);
   return (
     <MuiThemeProvider theme={theme}>
       <div>
         <Router>
-          <Navbar account={account} />
+          <Navbar account={account} role={role} />
           <Route exact path="/">
-            <TableProduct products={products} />
+            <TableProduct  products={products} />
           </Route>
           <Route exact path="/create">
-            <Form account={account} marketPlace={marketPlace} />
+            <Form type="create" account={account} marketPlace={marketPlace} />
           </Route>
           <Route exact path="/ship">
-            <h1>Ship</h1>
+          <Form type="ship" account={account} marketPlace={marketPlace} />
           </Route>
           <Route exact path="/receive">
-            <h1>Receive</h1>
+          <Form type="receive" account={account} marketPlace={marketPlace} />
           </Route>
           <Route exact path="/register">
             <UserForm account={account} marketPlace={marketPlace} />{" "}

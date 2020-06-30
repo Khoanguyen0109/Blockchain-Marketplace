@@ -45,7 +45,6 @@ contract Marketplace {
     );
     event UpdateProductState(
         uint indexed productID,
-        string productName,
         string owner,
         productStatus status
     );
@@ -66,6 +65,7 @@ contract Marketplace {
         require(checkUserExist(_userAddress) == false, 'user had registed');
         require(_userAddress == msg.sender 
                 , 'you can not use aother one account to register');
+        UserInfo[_userAddress].userAddress = msg.sender  ;
         UserInfo[_userAddress].userName = _userName;
         UserInfo[_userAddress].role = roles(_role);
         users.push(_userAddress);
@@ -103,7 +103,7 @@ contract Marketplace {
         emit ProdcutCreated(_proID , _productName, UserInfo[msg.sender].userName, productStatus.atcreator);
     }
 
-    function shipProdcut( uint _proID, string memory _productName ) public {
+    function shipProduct( uint _proID) public {
         require( checkProductExits(_proID)== true,'product have not exist');
         require(UserInfo[msg.sender].role == roles(2) 
                             ,'user much be shipper');
@@ -116,10 +116,10 @@ contract Marketplace {
                 products[productCount].status = productStatus.picked;
             }
         }
-        emit UpdateProductState(_proID,_productName,UserInfo[msg.sender].userName ,products[productCount].status);
+        emit UpdateProductState(_proID,UserInfo[msg.sender].userName ,products[productCount].status);
     }
 
-    function receiveProuct( uint _proID, string memory _productName ) public {
+    function receiveProduct( uint _proID ) public {
         
        
         require(UserInfo[msg.sender].role == roles(3) 
@@ -131,7 +131,7 @@ contract Marketplace {
             products[productCount].status = productStatus.delivered;
             }
         }
-        emit UpdateProductState(_proID,_productName,UserInfo[msg.sender].userName ,products[productCount].status);
+        emit UpdateProductState(_proID,UserInfo[msg.sender].userName ,products[productCount].status);
     }
     
      function checkProductExits (uint  id)public returns (bool) {

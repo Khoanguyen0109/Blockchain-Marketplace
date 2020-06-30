@@ -24,18 +24,21 @@ contract('Marketplace', ([deployer, seller, buyer]) => {
   })
 
   describe('products', async () => {
-    let result, productCount,register
+    let result,ship, productCount,register , registerShipper
 
     before(async () => {
-      console.log('seller', seller)
+     
       register = await marketplace.registerUser(seller, 'manu', 1,{ from: seller } )
+      registerShipper = await marketplace.registerUser(buyer , 'shipper', 2, { from: buyer } )
       result = await marketplace.createProduct(123,'iPhone X', { from: seller })
+      ship = await marketplace.shipProduct(123, { from: buyer })
       productCount = await marketplace.productCount()
     })
     it('register manu', async()=>{
       //SUCCESS
       const event = register.logs[0].args
       assert.equal(event.userAddress,seller,'address is correct')
+     
       assert.equal(event.userName, 'manu','name is manu')
       assert.equal(event.userRole,1,'role is manu')
       
@@ -49,6 +52,22 @@ contract('Marketplace', ([deployer, seller, buyer]) => {
       // console.log('event.status', event.status.toNumber())
       assert.equal(event.status.toNumber(), 0,'product at creator')
       assert.equal(event.manu, 'manu', 'owner is correct')
+      
+
+      // FAILURE: Product must have a name
+      // await await marketplace.createProduct('','', { from: seller }).should.be.rejected;
+      // FAILURE: Product must have a price
+      // await await marketplace.createProduct('','iPhone X', { from: seller }).should.be.rejected;
+    })
+
+    it('picked up products', async () => {
+      // SUCCESS
+     
+      const event2 = ship.logs[0].args
+      assert.equal(event2.productID.toNumber(), 123, 'id is correct')
+      // console.log('event.status', event.status.toNumber())
+      assert.equal(event2.status.toNumber(), 1,'product had picked')
+      assert.equal(event2.owner, 'shipper', 'owner is correct')
       
 
       // FAILURE: Product must have a name
