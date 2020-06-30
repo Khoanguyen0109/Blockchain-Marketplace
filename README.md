@@ -12,12 +12,30 @@ Set up [MetaMask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeoga
 
 ## Installation
 
-Use npm or yarn
+Run migrate to create abis/MarketPlace.js 
 ```
+truffle migrate
+```
+Use npm or yarn to install module for app
+```
+cd client
 npm install
 ```
 ```
+cd client
 yarn install
 ```
 
-Run migrate to create abis/MarketPlace.js 
+## Connect
+
+Open MetaMask 
+Login to MetaMask
+Connect  to HTTP://127.0.0.1:7545  
+
+## Run the app
+
+```
+yarn start
+```
+
+
